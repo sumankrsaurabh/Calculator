@@ -3,38 +3,45 @@ package com.coderon.calculator
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.coderon.calculator.ui.theme.Black200
 import com.coderon.calculator.ui.theme.Black500
 import com.coderon.calculator.ui.theme.Cyan
+import com.coderon.calculator.ui.theme.DarkWhite
 import com.coderon.calculator.ui.theme.Green
 import com.coderon.calculator.ui.theme.Red
 
 @Composable
 fun CalculatorUI(
     viewModel: CalculatorViewModel,
-){
+) {
     val expression = viewModel.expression
     val buttonSpacing = 16.dp
+    val darkMode = isSystemInDarkTheme()
 
     Log.d("MainActivity", "onCreate: ${viewModel.expression.value}")
     Box(
@@ -55,20 +62,22 @@ fun CalculatorUI(
             ) {
                 item {
                     Text(
-                        text = expression.value,
+                        text = expression.value.ifEmpty { "0" },
                         textAlign = TextAlign.End,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp, horizontal = 8.dp),
+                            .padding(vertical = 32.dp, horizontal = 16.dp),
                         fontWeight = FontWeight.Light,
-                        fontSize = 80.sp,
-                        color = com.coderon.calculator.ui.theme.Cyan,
+                        fontSize = 64.sp,
+                        color = if (darkMode) White else Black200,
                         maxLines = 1
                     )
                 }
             }
             Column(
-                modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+                modifier = Modifier
+                    .clip(RoundedCornerShape(topEnd = 32.dp, topStart = 32.dp))
+                    .background(if (darkMode) Black500 else DarkWhite)
                     .padding(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(buttonSpacing),
             ) {
@@ -80,10 +89,10 @@ fun CalculatorUI(
                 ) {
                     CalculatorButton(
                         symbol = "AC",
-                        color = Cyan,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = White),
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Green),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.clear()
@@ -92,10 +101,10 @@ fun CalculatorUI(
 
                     CalculatorButton(
                         symbol = "(",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Green),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("(")
@@ -103,22 +112,22 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = ")",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Green),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append(")")
                             }
                     )
 
-                    CalculatorButton(
-                        symbol = "÷",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                    CalculatorIconButton(
+                        symbol = R.drawable.divide_solid,
+                        color = if (darkMode) Black200 else White,
+                        tint = Green,
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("÷")
@@ -133,9 +142,10 @@ fun CalculatorUI(
                 ) {
                     CalculatorButton(
                         symbol = "7",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("7")
@@ -143,9 +153,10 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = "8",
-                        color = White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
+                        color = if (darkMode) Black200 else White,
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("8")
@@ -153,20 +164,21 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = "9",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("9")
                             }
                     )
-                    CalculatorButton(
-                        symbol = "×",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                    CalculatorIconButton(
+                        symbol = R.drawable.multiply,
+                        color = if (darkMode) Black200 else White,
+                        tint = Green,
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("×")
@@ -181,9 +193,10 @@ fun CalculatorUI(
                 ) {
                     CalculatorButton(
                         symbol = "4",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("4")
@@ -191,9 +204,10 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = "5",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("5")
@@ -201,20 +215,21 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = "6",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("6")
                             }
                     )
-                    CalculatorButton(
-                        symbol = "-",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                    CalculatorIconButton(
+                        symbol = R.drawable.minus,
+                        color = if (darkMode) Black200 else White,
+                        tint = Green,
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("-")
@@ -229,9 +244,10 @@ fun CalculatorUI(
                 ) {
                     CalculatorButton(
                         symbol = "1",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("1")
@@ -239,9 +255,10 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = "2",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
 
                             .clickable {
@@ -250,20 +267,21 @@ fun CalculatorUI(
                     )
                     CalculatorButton(
                         symbol = "3",
-                        color = White,
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("3")
                             }
                     )
-                    CalculatorButton(
-                        symbol = "+",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                    CalculatorIconButton(
+                        color = if (darkMode) Black200 else White,
+                        symbol = R.drawable.plus,
+                        tint = Green,
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append("+")
@@ -273,47 +291,49 @@ fun CalculatorUI(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp,end = 16.dp,bottom = 16.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
                 ) {
                     CalculatorButton(
-                        symbol = "0",
-                        color = White,
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .weight(1f)
-                            .clickable {
-                                viewModel.append("0")
-                            }
-                    )
-                    CalculatorButton(
                         symbol = ".",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.append(".")
                             }
                     )
                     CalculatorButton(
-                        symbol = "Del",
-                        color = White,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = Red),
+                        symbol = "0",
+                        color = if (darkMode) Black200 else White,
+                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = if (darkMode) White else Black200),
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
+                            .weight(1f)
+                            .clickable {
+                                viewModel.append("0")
+                            }
+                    )
+
+                    CalculatorIconButton(
+                        symbol = R.drawable.delete_left_solid,
+                        color = if (darkMode) Black200 else White,
+                        tint = Red,
+                        modifier = Modifier
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.delete()
                             }
                     )
-                    CalculatorButton(
-                        symbol = "=",
+                    CalculatorIconButton(
+                        symbol = R.drawable.equals,
                         color = Green,
-                        textStyle = TextStyle(fontWeight = FontWeight.Bold, color = White),
+                        tint = White,
                         modifier = Modifier
-                            .aspectRatio(1f)
+                            .height(64.dp)
                             .weight(1f)
                             .clickable {
                                 viewModel.evaluate()
